@@ -1,0 +1,17 @@
+{
+  "name": "blog-davin",
+  "version": "1.0.0",
+  "description": "A simple blog built with Express and HTML/CSS/JS",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "4.17.1",
+    "sqlite3": "5.0.2"
+  }
+}

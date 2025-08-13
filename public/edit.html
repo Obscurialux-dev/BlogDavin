@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Postingan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/" class="logo">Blog Pribadi</a>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/admin.html">Buat Postingan</a></li>
+                <li><button id="theme-toggle">Ganti Tema</button></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="main-content">
+            <h1>Edit Postingan</h1>
+            <form id="edit-form">
+                <!-- Form akan diisi oleh JavaScript -->
+                <p class="loading-text">Memuat data postingan...</p>
+            </form>
+            <p id="response-message"></p>
+        </div>
+    </main>
+    <script src="/js/edit.js"></script>
+</body>
+</html>

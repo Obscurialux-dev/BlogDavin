@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Buat Postingan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/" class="logo">Blog Pribadi</a>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/admin.html">Buat Postingan</a></li>
+                <li><button id="theme-toggle">Ganti Tema</button></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="main-content">
+            <h1>Buat Postingan Baru</h1>
+            <form id="article-form">
+                <div class="form-group">
+                    <label for="title">Judul</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="author">Penulis</label>
+                    <input type="text" id="author" name="author" value="Nama Kamu">
+                </div>
+                <div class="form-group">
+                    <label for="category">Kategori</label>
+                    <input type="text" id="category" name="category" placeholder="Contoh: Teknologi (opsional)">
+                </div>
+                <div class="form-group">
+                    <label for="imageUrl">URL Gambar (Thumbnail)</label>
+                    <input type="text" id="imageUrl" name="imageUrl" placeholder="https://... (opsional)">
+                </div>
+                <div class="form-group">
+                    <label for="content">Konten</label>
+                    <textarea id="content" name="content" rows="15" required></textarea>
+                </div>
+                <button type="submit">Publikasikan</button>
+            </form>
+            <p id="response-message"></p>
+        </div>
+    </main>
+    <script src="/js/admin.js"></script>
+</body>
+</html>
