@@ -19,8 +19,8 @@ app.get('/edit.html', adminAuth, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'edit.html'));
 });
 
-// Menyajikan semua file dari folder 'public'
-app.use(express.static('public'));
+// Menyajikan semua file dari folder 'public' dengan path absolut
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Rute API
 app.use('/api', apiRoutes);
