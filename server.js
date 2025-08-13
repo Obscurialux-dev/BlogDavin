@@ -1,4 +1,3 @@
-// File ini sudah diperbaiki untuk Vercel
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
@@ -12,8 +11,13 @@ app.use(cors());
 app.use(express.json());
 
 // Rute yang diproteksi
-app.get('/admin.html', adminAuth);
-app.get('/edit.html', adminAuth);
+// Setelah auth berhasil, kirimkan file yang sesuai
+app.get('/admin.html', adminAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+app.get('/edit.html', adminAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'edit.html'));
+});
 
 // Menyajikan semua file dari folder 'public'
 app.use(express.static('public'));
