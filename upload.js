@@ -1,7 +1,7 @@
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
-require('dotenv').config(); // Memuat variabel dari file .env
+// Baris require('dotenv').config() dihapus dari sini
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -12,10 +12,12 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'blog-pribadi', // Nama folder di Cloudinary
-    format: async (req, file) => 'webp', // Format gambar modern
+    folder: 'blog-pribadi',
+    format: async (req, file) => 'webp',
     public_id: (req, file) => 'artikel-' + Date.now(),
   },
 });
 
 const upload = multer({ storage: storage });
+
+module.exports = upload;

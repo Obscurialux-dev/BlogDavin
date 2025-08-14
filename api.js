@@ -1,7 +1,7 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
-const upload = require('./upload'); // Impor middleware upload
+const upload = require('./upload');
 
 const router = express.Router();
 const dbPath = path.resolve(__dirname, './database.db');
@@ -15,7 +15,6 @@ const db = new sqlite3.Database(dbPath, (err) => {
   )`);
 });
 
-// Endpoint Upload Gambar (BARU)
 router.post('/upload', upload.single('imageFile'), (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'Tidak ada file yang di-upload.' });
