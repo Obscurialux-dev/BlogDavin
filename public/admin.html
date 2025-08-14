@@ -17,7 +17,28 @@
         <div class="main-content">
             <h1>Buat Postingan Baru</h1>
             <form id="article-form" class="modern-form">
-                <!-- ... (input form tetap sama) ... -->
+                <div class="form-group">
+                    <label for="title">Judul</label>
+                    <input type="text" id="title" name="title" required placeholder="Judul yang menarik...">
+                </div>
+                <div class="form-group">
+                    <label for="author">Penulis</label>
+                    <input type="text" id="author" name="author" value="Nama Kamu">
+                </div>
+                <div class="form-group">
+                    <label for="category">Kategori</label>
+                    <input type="text" id="category" name="category" placeholder="Contoh: Teknologi">
+                </div>
+                <div class="form-group">
+                    <label for="imageFile">Upload Gambar Thumbnail</label>
+                    <input type="file" id="imageFile" name="imageFile" accept="image/*">
+                    <input type="hidden" id="imageUrl" name="imageUrl">
+                </div>
+                <div class="form-group">
+                    <label for="content">Konten</label>
+                    <textarea id="content" name="content" rows="15" required placeholder="Tulis ceritamu di sini..."></textarea>
+                </div>
+                <button type="submit">Publikasikan</button>
             </form>
             <p id="response-message"></p>
         </div>
