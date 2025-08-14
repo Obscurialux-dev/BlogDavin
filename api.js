@@ -1,26 +1,29 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const upload = require('./upload'); // Impor middleware upload
 
 const router = express.Router();
 const dbPath = path.resolve(__dirname, './database.db');
 const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    return console.error('Error saat koneksi ke DB:', err.message);
-  }
+  if (err) { return console.error('Error saat koneksi ke DB:', err.message); }
   console.log('Berhasil terhubung ke database SQLite.');
   db.run(`CREATE TABLE IF NOT EXISTS articles (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT NOT NULL,
-      content TEXT NOT NULL,
-      author TEXT DEFAULT 'Anonim',
-      imageUrl TEXT,
-      category TEXT, 
+      id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, content TEXT NOT NULL,
+      author TEXT DEFAULT 'Anonim', imageUrl TEXT, category TEXT, 
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 });
 
-// GET: Mengambil artikel DENGAN PAGINASI, PENCARIAN, & KATEGORI
+// Endpoint Upload Gambar (BARU)
+router.post('/upload', upload.single('imageFile'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: 'Tidak ada file yang di-upload.' });
+    }
+    res.json({ imageUrl: req.file.path });
+});
+
+// GET: Mengambil semua artikel
 router.get('/articles', (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 5;
@@ -54,7 +57,7 @@ router.get('/articles', (req, res) => {
   });
 });
 
-// GET: Menghitung total artikel DENGAN PENCARIAN & KATEGORI
+// GET: Menghitung total artikel
 router.get('/articles/count', (req, res) => {
     const searchTerm = req.query.search || '';
     const category = req.query.category || '';
@@ -82,7 +85,7 @@ router.get('/articles/count', (req, res) => {
     });
 });
 
-// GET: Mengambil daftar kategori unik (BARU)
+// GET: Mengambil daftar kategori unik
 router.get('/categories', (req, res) => {
     const sql = "SELECT DISTINCT category FROM articles WHERE category IS NOT NULL AND category != '' ORDER BY category";
     db.all(sql, [], (err, rows) => {
