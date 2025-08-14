@@ -47,7 +47,7 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* === HEADER & NAVIGASI (DIPERBARUI) === */
+/* === HEADER & NAVIGASI === */
 header {
     background: var(--bg-color);
     border-bottom: 1px solid var(--border-color);
@@ -63,6 +63,7 @@ nav {
     max-width: 1200px;
     margin: 0 auto;
     padding: 1.5rem 2rem;
+    position: relative; /* Diperlukan untuk menu mobile */
 }
 nav .logo {
     font-family: var(--font-heading);
@@ -113,49 +114,30 @@ nav a:hover::after {
 body.dark-theme nav a.active { color: var(--accent-1); }
 body:not(.dark-theme) nav a.active { color: var(--accent-1); }
 
-/* === KOTAK PENCARIAN DI NAVIGASI (BARU) === */
-.search-container {
+/* === Tombol Hamburger === */
+.hamburger {
+    display: none; /* Sembunyi di desktop */
+    flex-direction: column;
+    justify-content: space-around;
+    width: 2rem;
+    height: 2rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 10;
+}
+.hamburger span {
+    width: 2rem;
+    height: 0.25rem;
+    background: var(--text-color);
+    border-radius: 10px;
+    transition: all 0.3s linear;
     position: relative;
-}
-#search-box {
-    background-color: var(--card-bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 0.5rem 1rem;
-    font-family: var(--font-body);
-    color: var(--text-color);
-    width: 200px;
-    transition: all 0.3s ease;
-}
-#search-box:focus {
-    outline: none;
-    border-color: var(--accent-1);
-    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    transform-origin: 1px;
 }
 
-/* === KONTEN UTAMA & JUDUL === */
-main {
-    max-width: 800px;
-    margin: 4rem auto;
-    padding: 0 2rem;
-}
-h1 {
-    font-family: var(--font-heading);
-    font-size: 3rem;
-    letter-spacing: -1px;
-    text-align: center;
-    margin-bottom: 3rem;
-    background: linear-gradient(45deg, var(--accent-1), var(--accent-2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
-}
-body.dark-theme h1 {
-    text-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
-}
-
-/* === FORM MODERN (DIPERBARUI TOTAL) === */
+/* === FORM MODERN === */
 .modern-form {
     background-color: var(--card-bg-color);
     padding: 2.5rem;
@@ -195,4 +177,135 @@ body.dark-theme h1 {
     padding: 1rem;
 }
 
-/* ... (Sisa kode CSS lainnya tetap sama) ... */
+/* === KONTEN UTAMA & JUDUL === */
+main {
+    max-width: 800px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+}
+h1 {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    letter-spacing: -1px;
+    text-align: center;
+    margin-bottom: 3rem;
+    background: linear-gradient(45deg, var(--accent-1), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+body.dark-theme h1 {
+    text-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+}
+
+/* === KARTU ARTIKEL & GAMBAR === */
+.article-card {
+    background-color: var(--card-bg-color);
+    border-radius: 12px;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px var(--shadow-color), 0 4px 6px -4px var(--shadow-color);
+}
+.card-image-container {
+    position: relative;
+    overflow: hidden;
+}
+.article-card .thumbnail {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 0;
+    transition: transform 0.4s ease;
+}
+.article-card:hover .thumbnail {
+    transform: scale(1.05);
+}
+.card-image-container::after {
+    content: 'Baca Selengkapnya →';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+.article-card:hover .card-image-container::after {
+    opacity: 1;
+}
+.card-content {
+    padding: 2rem;
+}
+.card-content h2 {
+    font-family: var(--font-heading);
+    margin: 0 0 0.5rem 0;
+    font-size: 1.75rem;
+}
+.card-content .meta {
+    font-size: 0.9rem;
+    color: var(--meta-text-color);
+    margin-bottom: 1rem;
+}
+.card-content .preview {
+    color: var(--meta-text-color);
+}
+
+/* === ANIMASI SCROLL (UNTUK JS) === */
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 850px) {
+    .nav-right {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: var(--bg-color);
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem 0;
+        border-bottom: 1px solid var(--border-color);
+        transform: translateY(-150%);
+        transition: transform 0.3s ease-in-out;
+        z-index: -1;
+        gap: 2rem;
+    }
+    .nav-right.open {
+        transform: translateY(0);
+    }
+    .nav-right ul {
+        flex-direction: column;
+        gap: 2rem;
+    }
+    .hamburger {
+        display: flex;
+    }
+    main { margin: 2rem auto; padding: 0 1rem; }
+    h1 { font-size: 2.5rem; }
+    .article-card h2 { font-size: 1.5rem; }
+}
