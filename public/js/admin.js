@@ -1,23 +1,26 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Inisialisasi TinyMCE
+    tinymce.init({
+        selector: '#content',
+        plugins: 'autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
+        toolbar: 'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+        skin: (document.body.classList.contains('dark-theme') ? 'oxide-dark' : 'oxide'),
+        content_css: (document.body.classList.contains('dark-theme') ? 'dark' : 'default')
+    });
+
     const form = document.getElementById('article-form');
     const messageEl = document.getElementById('response-message');
-    // ... (kode tema & hamburger tetap sama) ...
     const themeToggle = document.getElementById('theme-toggle');
-    const currentTheme = localStorage.getItem('theme');
-    if (currentTheme === 'dark') { document.body.classList.add('dark-theme'); }
-    themeToggle.addEventListener('click', function() {
-        document.body.classList.toggle('dark-theme');
-        let theme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
-        localStorage.setItem('theme', theme);
-    });
     const hamburgerBtn = document.getElementById('hamburger-btn');
     const navMenu = document.getElementById('nav-menu');
+
+    // Logika tema & hamburger
     if (hamburgerBtn && navMenu) {
         hamburgerBtn.addEventListener('click', function() {
             navMenu.classList.toggle('open');
         });
     }
-
+    // (Kode tema lainnya tidak perlu di sini karena sudah ada di animations.js)
 
     if (form) {
         form.addEventListener('submit', function(e) {
@@ -30,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const submitArticleData = (finalImageUrl) => {
                 const data = {
                     title: e.target.elements.title.value,
-                    content: e.target.elements.content.value,
+                    content: tinymce.get('content').getContent(), // Ambil konten dari TinyMCE
                     author: e.target.elements.author.value,
                     category: e.target.elements.category.value,
                     imageUrl: finalImageUrl
@@ -47,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     messageEl.textContent = 'Artikel berhasil dipublikasikan!';
                     messageEl.style.color = 'green';
                     form.reset();
+                    tinymce.get('content').setContent(''); // Kosongkan editor
                 })
                 .catch(err => {
                     messageEl.textContent = `Gagal: ${err.message}`;
@@ -70,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         messageEl.style.color = 'red';
                     });
             } else {
-                submitArticleData(''); // Kirim string kosong jika tidak ada gambar
+                submitArticleData('');
             }
         });
     }

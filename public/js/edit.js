@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // 1. Ambil data artikel yang ada dan isi form
     fetch(`/api/articles/${articleId}`)
         .then(res => res.json())
         .then(result => {
@@ -38,20 +37,27 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="form-group">
                         <label for="content">Konten</label>
-                        <textarea id="content" name="content" rows="15" required>${article.content}</textarea>
+                        <textarea id="content" name="content" rows="15">${article.content}</textarea>
                     </div>
                     <button type="submit">Simpan Perubahan</button>
                 `;
+
+                // Inisialisasi TinyMCE setelah form diisi
+                tinymce.init({
+                    selector: '#content',
+                    plugins: 'autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
+                    toolbar: 'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+                    skin: (document.body.classList.contains('dark-theme') ? 'oxide-dark' : 'oxide'),
+                    content_css: (document.body.classList.contains('dark-theme') ? 'dark' : 'default')
+                });
             } else {
                 editForm.innerHTML = '<h1>Artikel tidak ditemukan.</h1>';
             }
         });
 
-    // 2. Tangani submit form untuk mengirim data update
     editForm.addEventListener('submit', function(e) {
         e.preventDefault();
         messageEl.textContent = 'Memproses...';
-        messageEl.style.color = 'var(--meta-text-color)';
 
         const imageFile = e.target.elements.imageFile.files[0];
         const existingImageUrl = e.target.elements.imageUrl.value;
@@ -59,12 +65,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const submitArticleData = (finalImageUrl) => {
             const data = {
                 title: e.target.elements.title.value,
-                content: e.target.elements.content.value,
+                content: tinymce.get('content').getContent(), // Ambil konten dari TinyMCE
                 author: e.target.elements.author.value,
                 category: e.target.elements.category.value,
                 imageUrl: finalImageUrl
             };
-
             fetch(`/api/articles/${articleId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -84,23 +89,19 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         if (imageFile) {
-            // Jika ada file baru yang dipilih, upload dulu
             messageEl.textContent = 'Meng-upload gambar baru...';
             const formData = new FormData();
             formData.append('imageFile', imageFile);
-
             fetch('/api/upload', { method: 'POST', body: formData })
                 .then(res => res.json())
                 .then(uploadResult => {
                     if (uploadResult.error) throw new Error(uploadResult.error);
-                    submitArticleData(uploadResult.imageUrl); // Gunakan URL baru
+                    submitArticleData(uploadResult.imageUrl);
                 })
                 .catch(err => {
                     messageEl.textContent = `Gagal upload gambar: ${err.message}`;
-                    messageEl.style.color = 'red';
                 });
         } else {
-            // Jika tidak ada file baru, gunakan URL gambar yang sudah ada
             submitArticleData(existingImageUrl);
         }
     });

@@ -8,19 +8,25 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+    <!-- Script Showdown.js dihapus dari sini -->
 </head>
 <body>
+    <!-- ... (Isi <body> tetap sama persis seperti sebelumnya) ... -->
     <header>
         <nav>
-            <a href="/" class="logo">Starluxx</a>
-            <div class="nav-right">
+            <a href="/" class="logo">Blog Pribadi</a>
+            <div class="nav-right" id="nav-menu">
                 <ul>
                     <li><a href="/">Home</a></li>
                     <li><a href="/admin.html">Buat Postingan</a></li>
                 </ul>
                 <button id="theme-toggle">Ganti Tema</button>
             </div>
+            <button class="hamburger" id="hamburger-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </nav>
     </header>
     <main>
@@ -28,7 +34,6 @@
             <p class="loading-text">Memuat artikel...</p>
         </div>
     </main>
-    <!-- Footer Dihapus -->
     <script src="/js/article.js"></script>
     <script src="/js/animations.js"></script>
 </body>

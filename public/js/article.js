@@ -15,14 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     const imageHtml = article.imageUrl ? `<img src="${article.imageUrl}" alt="" class="cover-image">` : '';
 
-                    // --- PERUBAHAN UTAMA DI SINI ---
-                    // 1. Buat converter Showdown
-                    const converter = new showdown.Converter();
-                    // 2. Ambil konten mentah (Markdown) dari database
-                    const rawContent = article.content;
-                    // 3. Ubah Markdown menjadi HTML
-                    const formattedContent = converter.makeHtml(rawContent);
-                    // --- AKHIR PERUBAHAN ---
+                    // Langsung render konten HTML dari database
+                    const formattedContent = article.content;
 
                     articleContent.innerHTML = `
                         <h1>${article.title}</h1>
@@ -41,16 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    const themeToggle = document.getElementById('theme-toggle');
-    const currentTheme = localStorage.getItem('theme');
-    if (currentTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-    }
-    themeToggle.addEventListener('click', function() {
-        document.body.classList.toggle('dark-theme');
-        let theme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
-        localStorage.setItem('theme', theme);
-    });
+    // ... (kode tema & hamburger sudah ada di animations.js) ...
 
     loadArticle();
 });
