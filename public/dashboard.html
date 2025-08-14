@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Postingan</title>
+    <title>Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
@@ -15,15 +15,15 @@
     </header>
     <main>
         <div class="main-content">
-            <h1>Edit Postingan</h1>
-            <form id="edit-form" class="modern-form">
-                <p class="loading-text">Memuat data postingan...</p>
-            </form>
-            <p id="response-message"></p>
+            <h1 id="dashboard-title">Dashboard Saya</h1>
+            <a href="/admin.html" class="btn">Tulis Artikel Baru</a>
+            <div id="my-articles-container" class="dashboard-articles-list">
+                <p class="loading-text">Memuat postingan saya...</p>
+            </div>
         </div>
     </main>
     <script type="module" src="/js/firebase-init.js"></script>
     <script type="module" src="/js/auth-ui.js"></script>
-    <script type="module" src="/js/edit.js"></script>
+    <script type="module" src="/js/dashboard.js"></script>
 </body>
 </html>

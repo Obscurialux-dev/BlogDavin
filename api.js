@@ -10,19 +10,31 @@ const db = new sqlite3.Database(dbPath, (err) => {
   console.log('Berhasil terhubung ke database SQLite.');
   db.run(`CREATE TABLE IF NOT EXISTS articles (
       id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, content TEXT NOT NULL,
-      author TEXT DEFAULT 'Anonim', imageUrl TEXT, category TEXT, 
+      author TEXT, imageUrl TEXT, category TEXT, 
+      userId TEXT, userEmail TEXT,
       createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 });
 
+// Endpoint Upload Gambar
 router.post('/upload', upload.single('imageFile'), (req, res) => {
-    if (!req.file) {
-        return res.status(400).json({ error: 'Tidak ada file yang di-upload.' });
-    }
+    if (!req.file) { return res.status(400).json({ error: 'Tidak ada file yang di-upload.' }); }
     res.json({ imageUrl: req.file.path });
 });
 
-// GET: Mengambil semua artikel
+// GET: Mengambil artikel untuk dashboard PENGGUNA TERTENTU (BARU)
+router.get('/my-articles', (req, res) => {
+    const userId = req.query.userId;
+    if (!userId) { return res.status(400).json({ error: "User ID dibutuhkan" }); }
+
+    const sql = "SELECT * FROM articles WHERE userId = ? ORDER BY createdAt DESC";
+    db.all(sql, [userId], (err, rows) => {
+        if (err) { return res.status(500).json({ "error": err.message }); }
+        res.json({ "message": "success", "data": rows });
+    });
+});
+
+// GET: Mengambil semua artikel DENGAN PAGINASI, PENCARIAN, & KATEGORI
 router.get('/articles', (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 5;
@@ -56,7 +68,7 @@ router.get('/articles', (req, res) => {
   });
 });
 
-// GET: Menghitung total artikel
+// GET: Menghitung total artikel DENGAN PENCARIAN & KATEGORI
 router.get('/articles/count', (req, res) => {
     const searchTerm = req.query.search || '';
     const category = req.query.category || '';
@@ -102,20 +114,21 @@ router.get('/articles/:id', (req, res) => {
     });
 });
 
-// POST: Membuat artikel baru
+// POST: Membuat artikel baru (dengan info user)
 router.post('/articles', (req, res) => {
-    const { title, content, author, imageUrl, category } = req.body;
+    const { title, content, author, imageUrl, category, userId, userEmail } = req.body;
     if (!title || !content) { return res.status(400).json({"error": "Judul dan konten tidak boleh kosong"}); }
-    const sql = 'INSERT INTO articles (title, content, author, imageUrl, category) VALUES (?, ?, ?, ?, ?)';
-    db.run(sql, [title, content, author, imageUrl, category], function(err) {
+    const sql = 'INSERT INTO articles (title, content, author, imageUrl, category, userId, userEmail) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    db.run(sql, [title, content, author, imageUrl, category, userId, userEmail], function(err) {
         if (err) { return res.status(400).json({"error": err.message}); }
         res.json({ "message": "success", "data": { id: this.lastID } });
     });
 });
 
-// PUT: Mengupdate artikel berdasarkan ID
+// PUT: Mengupdate artikel (dengan info user)
 router.put('/articles/:id', (req, res) => {
-    const { title, content, author, imageUrl, category } = req.body;
+    const { title, content, author, imageUrl, category, userId } = req.body;
+    // Seharusnya ada pengecekan apakah user yang mengedit adalah pemilik artikel
     if (!title || !content) { return res.status(400).json({"error": "Judul dan konten tidak boleh kosong"}); }
     const sql = `UPDATE articles SET title = ?, content = ?, author = ?, imageUrl = ?, category = ? WHERE id = ?`;
     db.run(sql, [title, content, author, imageUrl, category, req.params.id], function(err) {
@@ -124,8 +137,9 @@ router.put('/articles/:id', (req, res) => {
     });
 });
 
-// DELETE: Menghapus artikel berdasarkan ID
+// DELETE: Menghapus artikel
 router.delete('/articles/:id', (req, res) => {
+    // Seharusnya ada pengecekan apakah user yang menghapus adalah pemilik artikel
     const sql = 'DELETE FROM articles WHERE id = ?';
     db.run(sql, [req.params.id], function(err) {
         if (err) { return res.status(400).json({"error": err.message}); }

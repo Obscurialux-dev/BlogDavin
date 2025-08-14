@@ -8,32 +8,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
-    <!-- Script Showdown.js dihapus dari sini -->
 </head>
 <body>
     <header>
-        <nav>
-            <a href="/" class="logo">Blog Pribadi</a>
-            <div class="nav-right" id="nav-menu">
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/admin.html">Buat Postingan</a></li>
-                </ul>
-                <button id="theme-toggle">Ganti Tema</button>
-            </div>
-            <button class="hamburger" id="hamburger-btn">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </nav>
+        <nav id="main-nav"></nav>
     </header>
     <main>
         <div id="article-content" class="main-content">
             <p class="loading-text">Memuat artikel...</p>
         </div>
     </main>
+    <script type="module" src="/js/firebase-init.js"></script>
+    <script type="module" src="/js/auth-ui.js"></script>
     <script src="/js/article.js"></script>
-    <script src="/js/animations.js"></script>
 </body>
 </html>

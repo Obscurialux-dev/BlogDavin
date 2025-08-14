@@ -11,25 +11,7 @@
 </head>
 <body>
     <header>
-        <nav>
-            <a href="/" class="logo">Starluxx</a>
-            <div class="nav-right" id="nav-menu">
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/admin.html">Buat Postingan</a></li>
-                </ul>
-                <div class="search-container">
-                    <input type="search" id="search-box" placeholder="Cari...">
-                </div>
-                <button id="theme-toggle">Ganti Tema</button>
-            </div>
-            <!-- Tombol Hamburger BARU -->
-            <button class="hamburger" id="hamburger-btn">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </nav>
+        <nav id="main-nav"></nav>
     </header>
     <main>
         <div class="main-content">
@@ -39,7 +21,8 @@
             <div id="pagination-container"></div>
         </div>
     </main>
+    <script type="module" src="/js/firebase-init.js"></script>
+    <script type="module" src="/js/auth-ui.js"></script>
     <script src="/js/script.js"></script>
-    <script src="/js/animations.js"></script>
 </body>
 </html>
