@@ -9,11 +9,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
+    // 1. Ambil data artikel yang ada dan isi form
     fetch(`/api/articles/${articleId}`)
         .then(res => res.json())
         .then(result => {
             if (result.data) {
                 const article = result.data;
+                const imagePreview = article.imageUrl ? `<img src="${article.imageUrl}" alt="Pratinjau Gambar" style="max-width: 200px; margin-top: 10px; border-radius: 8px;">` : '';
+
                 editForm.innerHTML = `
                     <div class="form-group">
                         <label for="title">Judul</label>
@@ -25,11 +28,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="form-group">
                         <label for="category">Kategori</label>
-                        <input type="text" id="category" name="category" value="${article.category || ''}" placeholder="Contoh: Teknologi">
+                        <input type="text" id="category" name="category" value="${article.category || ''}">
                     </div>
                     <div class="form-group">
-                        <label for="imageUrl">URL Gambar (Thumbnail)</label>
-                        <input type="text" id="imageUrl" name="imageUrl" value="${article.imageUrl || ''}" placeholder="https://...">
+                        <label for="imageFile">Ganti Gambar Thumbnail (Opsional)</label>
+                        <input type="file" id="imageFile" name="imageFile" accept="image/*">
+                        <input type="hidden" id="imageUrl" name="imageUrl" value="${article.imageUrl || ''}">
+                        <div id="image-preview-container">${imagePreview}</div>
                     </div>
                     <div class="form-group">
                         <label for="content">Konten</label>
@@ -42,34 +47,61 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
+    // 2. Tangani submit form untuk mengirim data update
     editForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        const data = {
-            title: e.target.elements.title.value,
-            content: e.target.elements.content.value,
-            author: e.target.elements.author.value,
-            imageUrl: e.target.elements.imageUrl.value,
-            category: e.target.elements.category.value
+        messageEl.textContent = 'Memproses...';
+        messageEl.style.color = 'var(--meta-text-color)';
+
+        const imageFile = e.target.elements.imageFile.files[0];
+        const existingImageUrl = e.target.elements.imageUrl.value;
+
+        const submitArticleData = (finalImageUrl) => {
+            const data = {
+                title: e.target.elements.title.value,
+                content: e.target.elements.content.value,
+                author: e.target.elements.author.value,
+                category: e.target.elements.category.value,
+                imageUrl: finalImageUrl
+            };
+
+            fetch(`/api/articles/${articleId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(result => {
+                if (result.error) throw new Error(result.error);
+                messageEl.textContent = 'Perubahan berhasil disimpan!';
+                messageEl.style.color = 'green';
+                setTimeout(() => { window.location.href = '/'; }, 1500);
+            })
+            .catch(err => {
+                messageEl.textContent = `Gagal: ${err.message}`;
+                messageEl.style.color = 'red';
+            });
         };
 
-        messageEl.textContent = 'Menyimpan...';
+        if (imageFile) {
+            // Jika ada file baru yang dipilih, upload dulu
+            messageEl.textContent = 'Meng-upload gambar baru...';
+            const formData = new FormData();
+            formData.append('imageFile', imageFile);
 
-        fetch(`/api/articles/${articleId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        })
-        .then(res => res.json())
-        .then(result => {
-            if (result.message === 'success') {
-                messageEl.textContent = 'Perubahan berhasil disimpan!';
-                setTimeout(() => { window.location.href = '/'; }, 1500);
-            } else {
-                throw new Error(result.error || 'Gagal menyimpan perubahan.');
-            }
-        })
-        .catch(err => {
-            messageEl.textContent = `Error: ${err.message}`;
-        });
+            fetch('/api/upload', { method: 'POST', body: formData })
+                .then(res => res.json())
+                .then(uploadResult => {
+                    if (uploadResult.error) throw new Error(uploadResult.error);
+                    submitArticleData(uploadResult.imageUrl); // Gunakan URL baru
+                })
+                .catch(err => {
+                    messageEl.textContent = `Gagal upload gambar: ${err.message}`;
+                    messageEl.style.color = 'red';
+                });
+        } else {
+            // Jika tidak ada file baru, gunakan URL gambar yang sudah ada
+            submitArticleData(existingImageUrl);
+        }
     });
 });
