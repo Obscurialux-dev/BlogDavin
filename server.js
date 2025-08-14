@@ -10,13 +10,17 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
-// Rute auth lama dihapus dari sini
-
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', apiRoutes);
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// Fallback untuk semua halaman HTML agar bisa di-refresh
+app.get('*', (req, res) => {
+  const file = path.join(__dirname, 'public', req.path.endsWith('.html') ? req.path : `${req.path.slice(1)}.html`);
+  res.sendFile(file, (err) => {
+    if (err) {
+      res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    }
+  });
 });
 
 app.listen(PORT, () => {

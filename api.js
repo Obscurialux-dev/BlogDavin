@@ -16,13 +16,11 @@ const db = new sqlite3.Database(dbPath, (err) => {
   )`);
 });
 
-// Endpoint Upload Gambar
 router.post('/upload', upload.single('imageFile'), (req, res) => {
     if (!req.file) { return res.status(400).json({ error: 'Tidak ada file yang di-upload.' }); }
     res.json({ imageUrl: req.file.path });
 });
 
-// GET: Mengambil artikel untuk dashboard PENGGUNA TERTENTU (BARU)
 router.get('/my-articles', (req, res) => {
     const userId = req.query.userId;
     if (!userId) { return res.status(400).json({ error: "User ID dibutuhkan" }); }
@@ -34,17 +32,13 @@ router.get('/my-articles', (req, res) => {
     });
 });
 
-// GET: Mengambil semua artikel DENGAN PAGINASI, PENCARIAN, & KATEGORI
 router.get('/articles', (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 5;
   const offset = (page - 1) * limit;
   const searchTerm = req.query.search || '';
   const category = req.query.category || '';
-
-  let conditions = [];
-  let params = [];
-
+  let conditions = [], params = [];
   if (searchTerm) {
       conditions.push("(title LIKE ? OR content LIKE ?)");
       params.push(`%${searchTerm}%`, `%${searchTerm}%`);
@@ -53,29 +47,22 @@ router.get('/articles', (req, res) => {
       conditions.push("category = ?");
       params.push(category);
   }
-
   let sql = "SELECT * FROM articles";
   if (conditions.length > 0) {
       sql += " WHERE " + conditions.join(" AND ");
   }
-
   sql += " ORDER BY createdAt DESC LIMIT ? OFFSET ?";
   params.push(limit, offset);
-
   db.all(sql, params, (err, rows) => {
     if (err) { return res.status(500).json({ "error": err.message }); }
     res.json({ "message": "success", "data": rows });
   });
 });
 
-// GET: Menghitung total artikel DENGAN PENCARIAN & KATEGORI
 router.get('/articles/count', (req, res) => {
     const searchTerm = req.query.search || '';
     const category = req.query.category || '';
-
-    let conditions = [];
-    let params = [];
-
+    let conditions = [], params = [];
     if (searchTerm) {
         conditions.push("(title LIKE ? OR content LIKE ?)");
         params.push(`%${searchTerm}%`, `%${searchTerm}%`);
@@ -84,19 +71,16 @@ router.get('/articles/count', (req, res) => {
         conditions.push("category = ?");
         params.push(category);
     }
-
     let sql = "SELECT COUNT(*) as count FROM articles";
     if (conditions.length > 0) {
         sql += " WHERE " + conditions.join(" AND ");
     }
-
     db.get(sql, params, (err, row) => {
         if (err) { return res.status(500).json({ "error": err.message }); }
         res.json({ "message": "success", "data": row });
     });
 });
 
-// GET: Mengambil daftar kategori unik
 router.get('/categories', (req, res) => {
     const sql = "SELECT DISTINCT category FROM articles WHERE category IS NOT NULL AND category != '' ORDER BY category";
     db.all(sql, [], (err, rows) => {
@@ -105,7 +89,6 @@ router.get('/categories', (req, res) => {
     });
 });
 
-// GET: Mengambil satu artikel berdasarkan ID
 router.get('/articles/:id', (req, res) => {
     const sql = "SELECT * FROM articles WHERE id = ?";
     db.get(sql, [req.params.id], (err, row) => {
@@ -114,7 +97,6 @@ router.get('/articles/:id', (req, res) => {
     });
 });
 
-// POST: Membuat artikel baru (dengan info user)
 router.post('/articles', (req, res) => {
     const { title, content, author, imageUrl, category, userId, userEmail } = req.body;
     if (!title || !content) { return res.status(400).json({"error": "Judul dan konten tidak boleh kosong"}); }
@@ -125,10 +107,8 @@ router.post('/articles', (req, res) => {
     });
 });
 
-// PUT: Mengupdate artikel (dengan info user)
 router.put('/articles/:id', (req, res) => {
     const { title, content, author, imageUrl, category, userId } = req.body;
-    // Seharusnya ada pengecekan apakah user yang mengedit adalah pemilik artikel
     if (!title || !content) { return res.status(400).json({"error": "Judul dan konten tidak boleh kosong"}); }
     const sql = `UPDATE articles SET title = ?, content = ?, author = ?, imageUrl = ?, category = ? WHERE id = ?`;
     db.run(sql, [title, content, author, imageUrl, category, req.params.id], function(err) {
@@ -137,9 +117,7 @@ router.put('/articles/:id', (req, res) => {
     });
 });
 
-// DELETE: Menghapus artikel
 router.delete('/articles/:id', (req, res) => {
-    // Seharusnya ada pengecekan apakah user yang menghapus adalah pemilik artikel
     const sql = 'DELETE FROM articles WHERE id = ?';
     db.run(sql, [req.params.id], function(err) {
         if (err) { return res.status(400).json({"error": err.message}); }
