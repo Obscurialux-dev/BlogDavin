@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     const imageHtml = article.imageUrl ? `<img src="${article.imageUrl}" alt="" class="cover-image">` : '';
 
-                    // Langsung render konten HTML dari database
                     const formattedContent = article.content;
 
                     articleContent.innerHTML = `
@@ -34,8 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 articleContent.innerHTML = '<h1>Gagal memuat artikel.</h1>';
             });
     }
-
-    // ... (kode tema & hamburger sudah ada di animations.js) ...
 
     loadArticle();
 });

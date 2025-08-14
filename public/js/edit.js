@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <button type="submit">Simpan Perubahan</button>
                 `;
 
-                // Inisialisasi TinyMCE setelah form diisi
                 tinymce.init({
                     selector: '#content',
                     plugins: 'autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
@@ -65,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const submitArticleData = (finalImageUrl) => {
             const data = {
                 title: e.target.elements.title.value,
-                content: tinymce.get('content').getContent(), // Ambil konten dari TinyMCE
+                content: tinymce.get('content').getContent(),
                 author: e.target.elements.author.value,
                 category: e.target.elements.category.value,
                 imageUrl: finalImageUrl
@@ -79,12 +78,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(result => {
                 if (result.error) throw new Error(result.error);
                 messageEl.textContent = 'Perubahan berhasil disimpan!';
-                messageEl.style.color = 'green';
                 setTimeout(() => { window.location.href = '/'; }, 1500);
             })
             .catch(err => {
                 messageEl.textContent = `Gagal: ${err.message}`;
-                messageEl.style.color = 'red';
             });
         };
 

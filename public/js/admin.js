@@ -14,13 +14,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const hamburgerBtn = document.getElementById('hamburger-btn');
     const navMenu = document.getElementById('nav-menu');
 
-    // Logika tema & hamburger
     if (hamburgerBtn && navMenu) {
         hamburgerBtn.addEventListener('click', function() {
             navMenu.classList.toggle('open');
         });
     }
-    // (Kode tema lainnya tidak perlu di sini karena sudah ada di animations.js)
 
     if (form) {
         form.addEventListener('submit', function(e) {
@@ -33,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const submitArticleData = (finalImageUrl) => {
                 const data = {
                     title: e.target.elements.title.value,
-                    content: tinymce.get('content').getContent(), // Ambil konten dari TinyMCE
+                    content: tinymce.get('content').getContent(),
                     author: e.target.elements.author.value,
                     category: e.target.elements.category.value,
                     imageUrl: finalImageUrl
@@ -50,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     messageEl.textContent = 'Artikel berhasil dipublikasikan!';
                     messageEl.style.color = 'green';
                     form.reset();
-                    tinymce.get('content').setContent(''); // Kosongkan editor
+                    tinymce.get('content').setContent('');
                 })
                 .catch(err => {
                     messageEl.textContent = `Gagal: ${err.message}`;
@@ -71,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                     .catch(err => {
                         messageEl.textContent = `Gagal upload gambar: ${err.message}`;
-                        messageEl.style.color = 'red';
                     });
             } else {
                 submitArticleData('');
