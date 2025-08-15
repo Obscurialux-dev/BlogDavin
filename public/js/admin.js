@@ -1,19 +1,26 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Inisialisasi TinyMCE
-    tinymce.init({
-        selector: '#content',
-        plugins: 'autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
-        toolbar: 'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-        // Menyesuaikan tema editor dengan tema sistem/browser (lebih modern)
-        skin: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'oxide-dark' : 'oxide',
-        content_css: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default'
+// Variabel global untuk menyimpan instance editor
+let editor;
+
+// Inisialisasi CKEditor
+ClassicEditor
+    .create(document.querySelector('#content'), {
+        // Konfigurasi untuk upload gambar
+        simpleUpload: {
+            // URL endpoint di backend kamu yang menangani upload gambar
+            uploadUrl: '/api/upload'
+        }
+    })
+    .then(newEditor => {
+        editor = newEditor; // Simpan instance editor
+    })
+    .catch(error => {
+        console.error(error);
     });
 
+
+document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('article-form');
     const messageEl = document.getElementById('response-message');
-    
-    // Kode untuk hamburger button dan theme toggle sudah dihapus karena tidak diperlukan di sini.
-    // Fungsi navigasi sudah ditangani secara global oleh auth-ui.js.
 
     if (form) {
         form.addEventListener('submit', function(e) {
@@ -24,15 +31,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const imageFile = e.target.elements.imageFile.files[0];
 
             const submitArticleData = (finalImageUrl) => {
-                // Ambil konten dari editor TinyMCE yang sudah diinisialisasi
-                const content = tinymce.get('content').getContent();
+                // Ambil konten dari editor CKEditor
+                const content = editor.getData();
                 
                 const data = {
                     title: e.target.elements.title.value,
                     content: content,
                     author: e.target.elements.author.value,
                     category: e.target.elements.category.value,
-                    imageUrl: finalImageUrl
+                    imageUrl: finalImageUrl // Ini untuk thumbnail
                 };
 
                 fetch('/api/articles', {
@@ -46,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     messageEl.textContent = 'Artikel berhasil dipublikasikan!';
                     messageEl.style.color = 'green';
                     form.reset();
-                    tinymce.get('content').setContent(''); // Kosongkan editor setelah berhasil
+                    editor.setData(''); // Kosongkan editor
                 })
                 .catch(err => {
                     messageEl.textContent = `Gagal: ${err.message}`;
@@ -54,8 +61,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             };
 
+            // Logika untuk upload thumbnail tetap sama
             if (imageFile) {
-                messageEl.textContent = 'Meng-upload gambar...';
+                messageEl.textContent = 'Meng-upload thumbnail...';
                 const formData = new FormData();
                 formData.append('imageFile', imageFile);
 
@@ -66,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         submitArticleData(uploadResult.imageUrl);
                     })
                     .catch(err => {
-                        messageEl.textContent = `Gagal upload gambar: ${err.message}`;
+                        messageEl.textContent = `Gagal upload thumbnail: ${err.message}`;
                     });
             } else {
                 submitArticleData('');

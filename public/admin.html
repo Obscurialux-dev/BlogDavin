@@ -9,8 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     
-    <!-- DIPERBARUI: Script TinyMCE dengan API Key kamu -->
-    <script src="https://cdn.tiny.cloud/1/jqiah98376kndc14288n7jcekmt0uxxudg9msvf3l5jkz98i/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <!-- DITAMBAHKAN: Script CKEditor 5 -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 </head>
 <body>
     <header>
@@ -19,27 +19,11 @@
     <main>
         <h1>Buat Postingan Baru</h1>
         <form id="article-form" class="modern-form">
-            <div class="form-group">
-                <label for="title">Judul</label>
-                <input type="text" id="title" name="title" required placeholder="Judul yang menarik...">
-            </div>
-            <div class="form-group">
-                <label for="author">Penulis</label>
-                <input type="text" id="author" name="author" value="Nama Kamu">
-            </div>
-            <div class="form-group">
-                <label for="category">Kategori</label>
-                <input type="text" id="category" name="category" placeholder="Contoh: Teknologi">
-            </div>
-            <div class="form-group">
-                <label for="imageFile">Upload Gambar Thumbnail</label>
-                <input type="file" id="imageFile" name="imageFile" accept="image/*">
-                <input type="hidden" id="imageUrl" name="imageUrl">
-            </div>
+            <!-- ... form fields lain tetap sama ... -->
             <div class="form-group">
                 <label for="content">Konten</label>
-                <!-- Textarea ini akan diubah oleh TinyMCE -->
-                <textarea id="content" name="content" rows="15" required placeholder="Tulis ceritamu di sini..."></textarea>
+                <!-- DIGANTI: dari <textarea> menjadi <div> untuk CKEditor -->
+                <div id="content"></div>
             </div>
             <button type="submit">Publikasikan</button>
         </form>
