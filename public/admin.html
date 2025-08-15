@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     
-    <!-- DITAMBAHKAN: Script CKEditor 5 -->
+    <!-- Script CKEditor 5 -->
     <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 </head>
 <body>
@@ -19,12 +19,32 @@
     <main>
         <h1>Buat Postingan Baru</h1>
         <form id="article-form" class="modern-form">
-            <!-- ... form fields lain tetap sama ... -->
+            
+            <!-- DIKEMBALIKAN: Semua kolom form yang hilang -->
+            <div class="form-group">
+                <label for="title">Judul</label>
+                <input type="text" id="title" name="title" required placeholder="Judul yang menarik...">
+            </div>
+            <div class="form-group">
+                <label for="author">Penulis</label>
+                <input type="text" id="author" name="author" value="Nama Kamu">
+            </div>
+            <div class="form-group">
+                <label for="category">Kategori</label>
+                <input type="text" id="category" name="category" placeholder="Contoh: Teknologi">
+            </div>
+            <div class="form-group">
+                <label for="imageFile">Upload Gambar Thumbnail</label>
+                <input type="file" id="imageFile" name="imageFile" accept="image/*">
+                <input type="hidden" id="imageUrl" name="imageUrl">
+            </div>
+            
+            <!-- Editor Konten -->
             <div class="form-group">
                 <label for="content">Konten</label>
-                <!-- DIGANTI: dari <textarea> menjadi <div> untuk CKEditor -->
                 <div id="content"></div>
             </div>
+
             <button type="submit">Publikasikan</button>
         </form>
         <p id="response-message"></p>
