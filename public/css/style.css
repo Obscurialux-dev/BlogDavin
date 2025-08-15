@@ -1,14 +1,16 @@
-/* === VARIABEL DESAIN & TEMA === */
+/* public/css/style.css */
+
+/* === VARIABEL DESAIN & TEMA (DIGABUNGKAN) === */
 :root {
     /* Light Mode */
     --bg-color: #F8FAFC;
-    --text-color: #1E293B;
-    --meta-text-color: #64748B;
+    --surface-color: #FFFFFF;
+    --primary-text-color: #1E293B;
+    --secondary-text-color: #64748B;
     --border-color: #E2E8F0;
-    --card-bg-color: #FFFFFF;
-    --accent-1: #38BDF8; /* Biru Pastel */
-    --accent-2: #FBBF24; /* Emas Pastel */
-    --shadow-color: rgba(30, 41, 59, 0.1);
+    --accent-1: #38BDF8; /* Biru Cerah */
+    --accent-2: #FBBF24; /* Emas */
+    --shadow-color: rgba(30, 41, 59, 0.05);
 
     /* Font */
     --font-heading: 'Poppins', sans-serif;
@@ -18,16 +20,14 @@
 body.dark-theme {
     /* Dark Mode */
     --bg-color: #0F172A;
-    --text-color: #E2E8F0;
-    --meta-text-color: #94A3B8;
+    --surface-color: #1E293B;
+    --primary-text-color: #E2E8F0;
+    --secondary-text-color: #94A3B8;
     --border-color: #334155;
-    --card-bg-color: #1E293B;
-    --accent-1: #38BDF8; /* Biru Neon */
-    --accent-2: #FBBF24; /* Emas Neon */
     --shadow-color: rgba(0, 0, 0, 0.2);
 }
 
-/* === DASAR & TRANSIISI HALAMAN === */
+/* === DASAR & STRUKTUR HALAMAN === */
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -36,48 +36,41 @@ body {
     font-family: var(--font-body);
     margin: 0;
     background-color: var(--bg-color);
-    color: var(--text-color);
+    color: var(--primary-text-color);
     line-height: 1.7;
-    transition: background-color 0.4s ease, color 0.4s ease;
-    animation: page-fade-in 0.5s ease-out;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-@keyframes page-fade-in {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* === HEADER & NAVIGASI === */
+/* === HEADER & NAVIGASI MODERN === */
 header {
-    background: var(--bg-color);
+    background: var(--surface-color);
     border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
     z-index: 1000;
-    transition: background-color 0.4s ease;
+    transition: background-color 0.3s ease;
 }
-nav {
+nav#main-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1.5rem 2rem;
-    position: relative; /* Diperlukan untuk menu mobile */
+    padding: 1rem 2rem;
 }
-nav .logo {
+.logo {
     font-family: var(--font-heading);
     font-weight: 700;
     font-size: 1.5rem;
     text-decoration: none;
-    color: var(--text-color);
+    color: var(--primary-text-color);
 }
 .nav-right {
     display: flex;
     align-items: center;
     gap: 1.5rem;
 }
-nav ul {
+.nav-right ul {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -85,62 +78,87 @@ nav ul {
     align-items: center;
     gap: 1.5rem;
 }
-nav a {
+.nav-right a {
     text-decoration: none;
-    color: var(--meta-text-color);
+    color: var(--secondary-text-color);
     font-weight: 500;
-    position: relative;
-    transition: color 0.4s ease;
+    transition: color 0.3s ease;
 }
-nav a::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    transform: scaleX(0);
-    height: 2px;
-    bottom: -5px;
-    left: 0;
-    background-color: var(--accent-1);
-    transform-origin: bottom right;
-    transition: transform 0.4s ease-out;
+.nav-right a:hover {
+    color: var(--accent-1);
 }
-nav a:hover {
-    color: var(--text-color);
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border-color);
 }
-nav a:hover::after {
-    transform: scaleX(1);
-    transform-origin: bottom left;
-}
-body.dark-theme nav a.active { color: var(--accent-1); }
-body:not(.dark-theme) nav a.active { color: var(--accent-1); }
 
-/* === Tombol Hamburger === */
-.hamburger {
-    display: none; /* Sembunyi di desktop */
-    flex-direction: column;
-    justify-content: space-around;
-    width: 2rem;
-    height: 2rem;
-    background: transparent;
-    border: none;
-    cursor: pointer;
+/* === KONTEN UTAMA & LAYOUT DASHBOARD === */
+.dashboard-layout {
+    display: flex;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+    gap: 2rem;
+}
+.sidebar {
+    flex: 0 0 250px; /* Lebar sidebar tetap */
+    background-color: var(--surface-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    height: fit-content;
+}
+.sidebar h3 {
+    font-family: var(--font-heading);
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+.sidebar ul {
+    list-style: none;
     padding: 0;
-    z-index: 10;
 }
-.hamburger span {
-    width: 2rem;
-    height: 0.25rem;
-    background: var(--text-color);
-    border-radius: 10px;
-    transition: all 0.3s linear;
-    position: relative;
-    transform-origin: 1px;
+.sidebar ul li a {
+    display: block;
+    padding: 0.75rem;
+    text-decoration: none;
+    color: var(--secondary-text-color);
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s;
+}
+.sidebar ul li a:hover, .sidebar ul li a.active {
+    background-color: var(--bg-color);
+    color: var(--primary-text-color);
+    font-weight: 500;
+}
+main.content-area {
+    flex: 1; /* Konten utama mengisi sisa ruang */
+}
+main:not(.content-area) { /* Untuk halaman non-dashboard */
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 2rem;
 }
 
-/* === FORM MODERN === */
+h1 {
+    font-family: var(--font-heading);
+    font-size: 2.5rem; /* Ukuran lebih terkontrol */
+    letter-spacing: -1px;
+    margin-bottom: 2rem;
+    background: linear-gradient(45deg, var(--accent-1), var(--accent-2));
+    -webkit-background-clip: text;
+    /* DITAMBAHKAN: Properti standar untuk kompatibilitas */
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* === FORM MODERN (DIPERBAIKI) === */
 .modern-form {
-    background-color: var(--card-bg-color);
-    padding: 2.5rem;
+    background-color: var(--surface-color);
+    padding: 2rem;
     border-radius: 12px;
     border: 1px solid var(--border-color);
 }
@@ -151,161 +169,116 @@ body:not(.dark-theme) nav a.active { color: var(--accent-1); }
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
-    font-size: 0.9rem;
-    color: var(--meta-text-color);
+    color: var(--secondary-text-color);
 }
 .form-group input, .form-group textarea {
     width: 100%;
     padding: 0.8rem 1rem;
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    box-sizing: border-box;
     background-color: var(--bg-color);
-    color: var(--text-color);
-    font-family: var(--font-body);
+    color: var(--primary-text-color);
     font-size: 1rem;
     transition: all 0.3s ease;
 }
 .form-group input:focus, .form-group textarea:focus {
     outline: none;
     border-color: var(--accent-1);
-    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3);
 }
 .modern-form button[type="submit"] {
     width: 100%;
     font-size: 1rem;
-    padding: 1rem;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--accent-1);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.modern-form button[type="submit"]:hover {
+    background-color: #0EA5E9;
 }
 
-/* === KONTEN UTAMA & JUDUL === */
-main {
-    max-width: 800px;
-    margin: 4rem auto;
-    padding: 0 2rem;
-}
-h1 {
-    font-family: var(--font-heading);
-    font-size: 3rem;
-    letter-spacing: -1px;
-    text-align: center;
-    margin-bottom: 3rem;
-    background: linear-gradient(45deg, var(--accent-1), var(--accent-2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
-}
-body.dark-theme h1 {
-    text-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
-}
-
-/* === KARTU ARTIKEL & GAMBAR === */
-.article-card {
-    background-color: var(--card-bg-color);
+/* === KARTU ARTIKEL (LEBIH MODERN) === */
+#articles-container .article-card {
+    background-color: var(--surface-color);
     border-radius: 12px;
-    margin-bottom: 2.5rem;
-    box-shadow: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
     text-decoration: none;
     color: inherit;
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: block;
 }
-.article-card:hover {
+#articles-container .article-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 15px -3px var(--shadow-color), 0 4px 6px -4px var(--shadow-color);
+    box-shadow: 0 10px 15px -3px var(--shadow-color);
 }
-.card-image-container {
-    position: relative;
-    overflow: hidden;
+.article-card-content {
+    padding: 1.5rem;
 }
-.article-card .thumbnail {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    border-radius: 0;
-    transition: transform 0.4s ease;
-}
-.article-card:hover .thumbnail {
-    transform: scale(1.05);
-}
-.card-image-container::after {
-    content: 'Baca Selengkapnya →';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: var(--font-heading);
-    font-size: 1.2rem;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-.article-card:hover .card-image-container::after {
-    opacity: 1;
-}
-.card-content {
-    padding: 2rem;
-}
-.card-content h2 {
+.article-card-content h2 {
     font-family: var(--font-heading);
     margin: 0 0 0.5rem 0;
-    font-size: 1.75rem;
+    font-size: 1.5rem;
 }
-.card-content .meta {
+.article-card-content .meta {
     font-size: 0.9rem;
-    color: var(--meta-text-color);
+    color: var(--secondary-text-color);
     margin-bottom: 1rem;
 }
-.card-content .preview {
-    color: var(--meta-text-color);
+.article-card-content .preview {
+    color: var(--secondary-text-color);
 }
 
-/* === ANIMASI SCROLL (UNTUK JS) === */
-.reveal {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+/* === RESPONSIVE & HAMBURGER MENU === */
+.hamburger {
+    display: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 1010;
 }
-.reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
+.hamburger span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px 0;
+    background: var(--primary-text-color);
+    border-radius: 3px;
+    transition: all 0.3s ease-in-out;
 }
 
-/* === RESPONSIVE DESIGN === */
-@media (max-width: 850px) {
+@media (max-width: 768px) {
     .nav-right {
+        display: none;
         position: absolute;
         top: 100%;
-        right: 0;
-        background: var(--bg-color);
+        left: 0;
         width: 100%;
+        background-color: var(--surface-color);
         flex-direction: column;
-        align-items: center;
-        padding: 2rem 0;
+        padding: 1rem 0;
         border-bottom: 1px solid var(--border-color);
-        transform: translateY(-150%);
-        transition: transform 0.3s ease-in-out;
-        z-index: -1;
-        gap: 2rem;
     }
     .nav-right.open {
-        transform: translateY(0);
+        display: flex;
     }
     .nav-right ul {
         flex-direction: column;
-        gap: 2rem;
+        gap: 1rem;
     }
     .hamburger {
-        display: flex;
+        display: block;
     }
-    main { margin: 2rem auto; padding: 0 1rem; }
-    h1 { font-size: 2.5rem; }
-    .article-card h2 { font-size: 1.5rem; }
+    .dashboard-layout {
+        flex-direction: column;
+    }
+    .sidebar {
+        flex: 0 0 auto; /* Reset flex-basis */
+    }
 }

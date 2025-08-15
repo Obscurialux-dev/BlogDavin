@@ -9,6 +9,22 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
+    // Fungsi untuk inisialisasi TinyMCE
+    function initializeTinyMCE() {
+        // Hapus instance lama jika ada (untuk mencegah error)
+        if (tinymce.get('content')) {
+            tinymce.remove('#content');
+        }
+        tinymce.init({
+            selector: '#content',
+            plugins: 'autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
+            toolbar: 'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+            skin: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'oxide-dark' : 'oxide',
+            content_css: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default'
+        });
+    }
+
+    // Ambil data artikel
     fetch(`/api/articles/${articleId}`)
         .then(res => res.json())
         .then(result => {
@@ -42,18 +58,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     <button type="submit">Simpan Perubahan</button>
                 `;
 
-                tinymce.init({
-                    selector: '#content',
-                    plugins: 'autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
-                    toolbar: 'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-                    skin: (document.body.classList.contains('dark-theme') ? 'oxide-dark' : 'oxide'),
-                    content_css: (document.body.classList.contains('dark-theme') ? 'dark' : 'default')
-                });
+                // Panggil inisialisasi SETELAH form dibuat
+                initializeTinyMCE();
             } else {
                 editForm.innerHTML = '<h1>Artikel tidak ditemukan.</h1>';
             }
         });
 
+    // Event listener untuk submit form
     editForm.addEventListener('submit', function(e) {
         e.preventDefault();
         messageEl.textContent = 'Memproses...';
@@ -78,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(result => {
                 if (result.error) throw new Error(result.error);
                 messageEl.textContent = 'Perubahan berhasil disimpan!';
-                setTimeout(() => { window.location.href = '/'; }, 1500);
+                setTimeout(() => { window.location.href = '/dashboard.html'; }, 1500);
             })
             .catch(err => {
                 messageEl.textContent = `Gagal: ${err.message}`;

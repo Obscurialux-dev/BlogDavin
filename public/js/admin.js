@@ -4,34 +4,32 @@ document.addEventListener('DOMContentLoaded', function() {
         selector: '#content',
         plugins: 'autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
         toolbar: 'undo redo | blocks | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-        skin: (document.body.classList.contains('dark-theme') ? 'oxide-dark' : 'oxide'),
-        content_css: (document.body.classList.contains('dark-theme') ? 'dark' : 'default')
+        // Menyesuaikan tema editor dengan tema sistem/browser (lebih modern)
+        skin: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'oxide-dark' : 'oxide',
+        content_css: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default'
     });
 
     const form = document.getElementById('article-form');
     const messageEl = document.getElementById('response-message');
-    const themeToggle = document.getElementById('theme-toggle');
-    const hamburgerBtn = document.getElementById('hamburger-btn');
-    const navMenu = document.getElementById('nav-menu');
-
-    if (hamburgerBtn && navMenu) {
-        hamburgerBtn.addEventListener('click', function() {
-            navMenu.classList.toggle('open');
-        });
-    }
+    
+    // Kode untuk hamburger button dan theme toggle sudah dihapus karena tidak diperlukan di sini.
+    // Fungsi navigasi sudah ditangani secara global oleh auth-ui.js.
 
     if (form) {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             messageEl.textContent = 'Memproses...';
-            messageEl.style.color = 'var(--meta-text-color)';
+            messageEl.style.color = 'var(--secondary-text-color)';
 
             const imageFile = e.target.elements.imageFile.files[0];
 
             const submitArticleData = (finalImageUrl) => {
+                // Ambil konten dari editor TinyMCE yang sudah diinisialisasi
+                const content = tinymce.get('content').getContent();
+                
                 const data = {
                     title: e.target.elements.title.value,
-                    content: tinymce.get('content').getContent(),
+                    content: content,
                     author: e.target.elements.author.value,
                     category: e.target.elements.category.value,
                     imageUrl: finalImageUrl
@@ -48,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     messageEl.textContent = 'Artikel berhasil dipublikasikan!';
                     messageEl.style.color = 'green';
                     form.reset();
-                    tinymce.get('content').setContent('');
+                    tinymce.get('content').setContent(''); // Kosongkan editor setelah berhasil
                 })
                 .catch(err => {
                     messageEl.textContent = `Gagal: ${err.message}`;
