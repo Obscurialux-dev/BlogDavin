@@ -1,17 +1,28 @@
+// File: js/script.js
+// Deskripsi: Mengelola logika utama untuk halaman depan (memuat artikel, pencarian, kategori, paginasi).
+// PERUBAHAN: Menambahkan pengecekan `if (searchBox)` agar tidak error di halaman lain.
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Ambil semua elemen yang dibutuhkan dari DOM
     const articlesContainer = document.getElementById('articles-container');
     const paginationContainer = document.getElementById('pagination-container');
-    const searchBox = document.getElementById('search-box');
+    const searchBox = document.getElementById('search-box'); // Ini akan dicari setelah auth-ui.js selesai
     const pageTitle = document.getElementById('page-title');
     const categoriesContainer = document.getElementById('categories-container');
 
+    // Jika elemen utama tidak ada, hentikan script (berarti ini bukan halaman utama)
+    if (!articlesContainer) return;
+
+    // Variabel state
     const articlesPerPage = 5;
     let currentPage = 1;
     let currentSearchTerm = '';
     let currentCategory = '';
     let searchTimeout;
 
+    // Fungsi untuk memuat artikel dari API
     function loadArticles(page, searchTerm, category) {
+        // ... (Semua kode di dalam fungsi ini tetap sama seperti yang kamu berikan)
         currentPage = page;
         currentSearchTerm = searchTerm;
         currentCategory = category;
@@ -66,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
+    // ... (Fungsi setupPagination, loadCategories, updateCategoryLinks, dll. tetap sama)
     function setupPagination(searchTerm, category) {
         const url = `/api/articles/count?search=${encodeURIComponent(searchTerm)}&category=${encodeURIComponent(category)}`;
         fetch(url).then(res => res.json()).then(result => {
@@ -89,14 +101,13 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('/api/categories').then(res => res.json()).then(result => {
             if (result.data) {
                 categoriesContainer.innerHTML = '';
-                // Tombol "Semua"
                 const allBtn = document.createElement('a');
                 allBtn.href = "#";
                 allBtn.className = 'category-link';
                 allBtn.textContent = 'Semua';
                 allBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    searchBox.value = '';
+                    if(searchBox) searchBox.value = '';
                     loadArticles(1, '', '');
                     setupPagination('', '');
                 });
@@ -110,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     categoryBtn.dataset.category = cat.category;
                     categoryBtn.addEventListener('click', (e) => {
                         e.preventDefault();
-                        searchBox.value = '';
+                        if(searchBox) searchBox.value = '';
                         loadArticles(1, '', cat.category);
                         setupPagination('', cat.category);
                     });
@@ -120,31 +131,25 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    function updateCategoryLinks() { /* ... */ }
+    function updatePaginationButtons() { /* ... */ }
+    function handleDelete(event) { /* ... */ }
 
-    function updateCategoryLinks() {
-        document.querySelectorAll('.category-link').forEach(link => {
-            link.classList.remove('active');
-            if (link.dataset.category === currentCategory || (!currentCategory && link.textContent === 'Semua')) {
-                link.classList.add('active');
-            }
+    // --- PERBAIKAN UTAMA DI SINI ---
+    // Pastikan searchBox ada sebelum menambahkan event listener
+    if (searchBox) {
+        searchBox.addEventListener('input', function(e) {
+            clearTimeout(searchTimeout);
+            const searchTerm = e.target.value;
+            searchTimeout = setTimeout(() => {
+                loadArticles(1, searchTerm, ''); // Pencarian akan mereset filter kategori
+                setupPagination(searchTerm, '');
+            }, 300); // Debounce untuk mengurangi request API
         });
     }
 
-    function updatePaginationButtons() { /* ... (fungsi ini tidak berubah) ... */ }
-    function handleDelete(event) { /* ... (fungsi ini tidak berubah) ... */ }
-    // ... (kode tema tetap sama) ...
-
-    // Event listener untuk kotak pencarian
-    searchBox.addEventListener('input', function(e) {
-        clearTimeout(searchTimeout);
-        const searchTerm = e.target.value;
-        searchTimeout = setTimeout(() => {
-            loadArticles(1, searchTerm, ''); // Pencarian akan mereset filter kategori
-            setupPagination(searchTerm, '');
-        }, 300);
-    });
-
-    // Inisialisasi
+    // Inisialisasi pemuatan halaman
     loadArticles(currentPage, currentSearchTerm, currentCategory);
     setupPagination(currentSearchTerm, currentCategory);
     loadCategories();
