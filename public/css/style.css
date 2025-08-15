@@ -150,7 +150,6 @@ h1 {
     margin-bottom: 2rem;
     background: linear-gradient(45deg, var(--accent-1), var(--accent-2));
     -webkit-background-clip: text;
-    /* DITAMBAHKAN: Properti standar untuk kompatibilitas */
     background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -233,6 +232,11 @@ h1 {
 }
 .article-card-content .preview {
     color: var(--secondary-text-color);
+}
+
+/* === DITAMBAHKAN: PENGATURAN TAMPILAN EDITOR === */
+.ck-editor__editable {
+    min-height: 350px; /* Atur tinggi minimal editor di sini */
 }
 
 /* === RESPONSIVE & HAMBURGER MENU === */
