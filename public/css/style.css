@@ -309,6 +309,8 @@ h1 {
     /* Hapus background gradient agar solid */
     background: none;
     -webkit-background-clip: unset;
+    /* DITAMBAHKAN: Properti standar untuk kompatibilitas */
+    background-clip: unset; 
     -webkit-text-fill-color: unset;
 }
 
