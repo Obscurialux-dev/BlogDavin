@@ -286,3 +286,108 @@ h1 {
         flex: 0 0 auto; /* Reset flex-basis */
     }
 }
+
+/* === STYLE HALAMAN ARTIKEL (TAMBAHAN) === */
+
+.article-view {
+    max-width: 740px; /* Lebar konten yang nyaman dibaca */
+    margin: 2rem auto;
+    padding: 0 20px;
+}
+
+.article-header {
+    margin-bottom: 2rem;
+}
+
+.article-title {
+    font-family: var(--font-heading);
+    font-size: 2.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+    color: var(--primary-text-color);
+    /* Hapus background gradient agar solid */
+    background: none;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
+}
+
+.article-subtitle {
+    font-size: 1.2rem;
+    color: var(--secondary-text-color);
+    margin-bottom: 1.5rem;
+}
+
+.author-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.author-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.author-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.author-name {
+    font-weight: 500;
+    color: var(--primary-text-color);
+}
+
+.article-meta {
+    font-size: 0.9rem;
+    color: var(--secondary-text-color);
+}
+
+.article-figure {
+    margin: 0 0 2rem 0;
+}
+
+.article-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.image-caption {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--secondary-text-color);
+    margin-top: 0.5rem;
+}
+
+.article-body {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+/* Style untuk elemen di dalam konten artikel */
+.article-body p {
+    margin-bottom: 1.5rem;
+}
+
+.article-body h2, .article-body h3 {
+    font-family: var(--font-heading);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.article-body a {
+    color: var(--accent-1);
+    text-decoration: underline;
+}
+
+.article-body blockquote {
+    border-left: 3px solid var(--accent-1);
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    font-style: italic;
+    color: var(--secondary-text-color);
+}
